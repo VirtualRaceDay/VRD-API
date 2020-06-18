@@ -4,7 +4,7 @@
   "description": "Virtual Race Day API services",
   "main": "src/index.js",
   "scripts": {
-    "build": "babel src/index.js -d dist",
+    "build": "babel src --out-dir dist --ignore 'src/**/*.test.js'",
     "lint": "eslint 'src/**/*.js'",
     "start": "npm-run-all lint build start:prod",
     "start:prod": "node dist/index.js",
