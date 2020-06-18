@@ -1,0 +1,36 @@
+{
+  "name": "vrd-api",
+  "version": "0.1.0",
+  "description": "Virtual Race Day API services",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "start:dev": "babel-node src/index.js",
+    "test": "jest"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VirtualRaceDay/VRD-API.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VirtualRaceDay/VRD-API/issues"
+  },
+  "homepage": "https://github.com/VirtualRaceDay/VRD-API#readme",
+  "private": true,
+  "devDependencies": {
+    "@babel/cli": "7.10.1",
+    "@babel/core": "7.10.2",
+    "@babel/node": "7.10.1",
+    "@babel/preset-env": "7.10.2",
+    "babel-jest": "26.0.1",
+    "eslint": "7.2.0",
+    "jest": "26.0.1"
+  }
+}
