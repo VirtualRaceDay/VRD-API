@@ -17,24 +17,24 @@ export default (mongoDbUri, databaseName) => {
   });
 
   // Log successful connection
-  mongoose.connection.on('connected', function () {
+  mongoose.connection.on('connected', () => {
     console.log(`Mongoose connection open to database: ${databaseName}`);
   });
 
   // If the connection throws an error, log it and then exit the application
-  mongoose.connection.on('error', function (err) {
+  mongoose.connection.on('error', (err) => {
     console.error('Mongoose connection error', err);
     process.exit(0);
   });
 
   // Log disconnected
-  mongoose.connection.on('disconnected', function () {
+  mongoose.connection.on('disconnected', () => {
     console.log('Mongoose connection disconnected');
   });
 
   // If the user attempts to close the app by terminating it then cleanup and exit
   process.on('SIGINT', function () {
-    mongoose.connection.close(function () {
+    mongoose.connection.close(() => {
       process.exit(0);
     });
   });
