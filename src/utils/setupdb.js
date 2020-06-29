@@ -21,10 +21,9 @@ export default (mongoDbUri, databaseName) => {
     console.log(`Mongoose connection open to database: ${databaseName}`);
   });
 
-  // If the connection throws an error, log it and then exit the application
+  // If the connection throws an error, log it
   mongoose.connection.on('error', (err) => {
     console.error('Mongoose connection error', err);
-    process.exit(0);
   });
 
   // Log disconnected
