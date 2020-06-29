@@ -33,7 +33,7 @@ export default (mongoDbUri, databaseName) => {
   });
 
   // If the user attempts to close the app by terminating it then cleanup and exit
-  process.on('SIGINT', function () {
+  process.on('SIGINT', () => {
     mongoose.connection.close(() => {
       process.exit(0);
     });
