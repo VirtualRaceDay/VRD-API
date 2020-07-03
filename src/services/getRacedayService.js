@@ -1,8 +1,15 @@
 import RaceDay from '../models/racedayModel';
 
-export const getAllRacedays = async (res) => {
-  const racedays = await RaceDay.find().exec();
-  res.status(200).send(racedays);
+export const getRacedayById = async (req, res) => {
+  const { id } = req.params;
+
+  const raceday = await RaceDay.findById(id).exec();
+
+  if (!raceday) {
+    res.status(404).send();
+  } else {
+    res.send(raceday);
+  }
 };
 
-export default getAllRacedays;
+export default getRacedayById;
