@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/VirtualRaceDay/VRD-API#readme",
   "private": true,
-  "devDependencies": {
+  "dependencies": {
     "@babel/cli": "7.10.1",
     "@babel/core": "7.10.2",
     "@babel/node": "7.10.1",
