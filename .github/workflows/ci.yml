@@ -1,11 +1,11 @@
 # Sanity checks on pull request creation
 
-name: Lint & test
+name: Lint and test
 
 on:
   pull_request:
     branches:
-      - develop
+      - development
 
 jobs:
   build:
