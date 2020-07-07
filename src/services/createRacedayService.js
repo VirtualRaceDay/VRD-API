@@ -16,9 +16,7 @@ const insertRacedayIntoDb = (req) => {
   const raceday = req.body;
   let newRaceday = new RaceDay(raceday);
 
-  return new Promise((success, fail) => {
-    newRaceday.save().then(success).catch(fail);
-  });
+  return newRaceday.save();
 };
 
 export default createRaceday;
