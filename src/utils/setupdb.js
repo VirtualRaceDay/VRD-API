@@ -15,7 +15,7 @@ export default (mongoDbUri) => {
 
   // Log successful connection
   mongoose.connection.on('connected', () => {
-    console.log(`Mongoose connection open to database`);
+    console.log('Mongoose connection open to database');
   });
 
   // If the connection throws an error, log it
