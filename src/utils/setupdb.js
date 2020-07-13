@@ -7,8 +7,6 @@ import mongoose from 'mongoose';
  * @returns {Mongoose} the Mongoose API setup for this application.
  */
 export default (mongoDbUri) => {
-  const databaseName = mongoDbUri.substring(mongoDbUri.lastIndexOf('/'));
-
   // Create the database connection
   mongoose.connect(mongoDbUri, {
     useNewUrlParser: true,
@@ -17,7 +15,7 @@ export default (mongoDbUri) => {
 
   // Log successful connection
   mongoose.connection.on('connected', () => {
-    console.log(`Mongoose connection open to database: ${databaseName}`);
+    console.log(`Mongoose connection open to database`);
   });
 
   // If the connection throws an error, log it
