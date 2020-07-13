@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
  * @returns {Mongoose} the Mongoose API setup for this application.
  */
 export default (mongoDbUri) => {
-  const databaseName = mongoDbUri.substring(mongoDbUri.lastIndexOf("/"));
+  const databaseName = mongoDbUri.substring(mongoDbUri.lastIndexOf('/'));
 
   // Create the database connection
   mongoose.connect(mongoDbUri, {
