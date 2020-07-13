@@ -1,15 +1,24 @@
-import express from 'express';
-import { getAllRacedays } from '../services/racedayRepo';
+import {
+  getAllRacedays,
+  createRacedayService,
+  getRacedayById,
+  updateRaceday,
+  deleteRaceday,
+} from '../controllers/racedayControllers';
 
 // Create a new router to handle the books resource
-const router = express.Router();
+const racedayRoutes = (server) => {
+  server
+    .route('/racedays')
+    .get((req, res) => getAllRacedays(req, res))
+    .post((req, res) => createRacedayService(req, res));
 
-// NB: This is where we will add end points
-router.get('/', async (req, res) => {
-  const racedays = await getAllRacedays();
-
-  res.status(200).send(racedays);
-});
+  server
+    .route('/racedays/:id')
+    .get((req, res) => getRacedayById(req, res))
+    .put((req, res) => updateRaceday(req, res))
+    .delete((req, res) => deleteRaceday(req, res));
+};
 
 // Export the router ready to be imported into an app.
-export default router;
+export default racedayRoutes;
