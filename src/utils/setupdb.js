@@ -4,21 +4,18 @@ import mongoose from 'mongoose';
  * Connect to a mongoose database
  *
  * @param {string} mongoDbUri the URI of the MongoDB to connect too. Including credentials
- * @param {string} databaseName the database to switch to on connection
  * @returns {Mongoose} the Mongoose API setup for this application.
  */
-export default (mongoDbUri, databaseName) => {
-  const connectionString = createConnString(mongoDbUri, databaseName);
-
+export default (mongoDbUri) => {
   // Create the database connection
-  mongoose.connect(connectionString, {
+  mongoose.connect(mongoDbUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
 
   // Log successful connection
   mongoose.connection.on('connected', () => {
-    console.log(`Mongoose connection open to database: ${databaseName}`);
+    console.log('Mongoose connection open to database');
   });
 
   // If the connection throws an error, log it
@@ -40,6 +37,3 @@ export default (mongoDbUri, databaseName) => {
 
   return mongoose;
 };
-
-const createConnString = (mongoDbUri, databaseName) =>
-  `${mongoDbUri}/${databaseName}?authSource=admin`;
