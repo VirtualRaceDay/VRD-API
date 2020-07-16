@@ -1,8 +1,8 @@
 import setupDb from './utils/setupdb';
 import config from './config';
 
-const { DB_MONGO_URL, DB_NAME } = config;
+const { MONGODB_URI } = config;
 
-const db = setupDb(DB_MONGO_URL, DB_NAME);
+const db = setupDb(MONGODB_URI);
 
 export default db;
