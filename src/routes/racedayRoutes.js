@@ -1,23 +1,28 @@
 import {
-  getAllRacedays,
+  getAllRacedaysService,
   createRacedayService,
-  getRacedayById,
-  updateRaceday,
-  deleteRaceday,
+  getRacedayByIdService,
+  updateRacedayService,
+  deleteRacedayService,
+  getRacedayByPinService,
 } from '../controllers/racedayControllers';
 
 // Create a new router to handle the books resource
 const racedayRoutes = (server) => {
   server
     .route('/racedays')
-    .get((req, res) => getAllRacedays(req, res))
+    .get((req, res) => getAllRacedaysService(req, res))
     .post((req, res) => createRacedayService(req, res));
 
   server
     .route('/racedays/:id')
-    .get((req, res) => getRacedayById(req, res))
-    .put((req, res) => updateRaceday(req, res))
-    .delete((req, res) => deleteRaceday(req, res));
+    .get((req, res) => getRacedayByIdService(req, res))
+    .put((req, res) => updateRacedayService(req, res))
+    .delete((req, res) => deleteRacedayService(req, res));
+
+  server
+    .route('/raceday/:pin')
+    .get((req, res) => getRacedayByPinService(req, res));
 };
 
 // Export the router ready to be imported into an app.
