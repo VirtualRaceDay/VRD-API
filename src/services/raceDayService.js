@@ -3,7 +3,7 @@ import RaceDay from '../models/raceDayModel';
 export const createRaceDay = async (raceDay) => {
   const newRaceday = new RaceDay(raceDay);
   await newRaceday.save();
-  return newRaceday['_id'];
+  return newRaceday['_id'].toHexString();
 };
 
 export const getAllRaceDays = () => RaceDay.find().exec();
