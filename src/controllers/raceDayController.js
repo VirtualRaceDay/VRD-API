@@ -29,7 +29,7 @@ export const createRaceDay = async (req, res) => {
 export const getAllRaceDays = async (req, res) => {
   try {
     const races = await RaceDayService.getAllRaceDays();
-    return okResponse(races);
+    return okResponse(res, races);
   } catch (e) {
     return errorResponse(res, e.message);
   }
@@ -45,7 +45,7 @@ export const getRaceDayById = async (res, req) => {
   try {
     const race = await RaceDayService.getRaceDayById(id);
     if (race._id) {
-      return okResponse(race);
+      return okResponse(res, race);
     }
     return notFoundResponse(res);
   } catch (e) {
