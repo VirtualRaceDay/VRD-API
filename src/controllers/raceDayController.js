@@ -8,7 +8,7 @@ const validateRaceDay = (raceDay) => (raceDay.name &&
   raceDay.maxPlayers);
 
 const errorResponse = (res, message) => res.status(500).send({ code: 500, data: `Internal Server Error: ${message}`});
-const notFoundResponse = (res) => res.status(404).send({ code: 400, data: 'Id not found'});
+const notFoundResponse = (res) => res.status(404).send({ code: 404, data: 'Id not found'});
 const okResponse = (res, data) => res.send({ code: 200, data });
 
 export const createRaceDay = async (req, res) => {
@@ -35,7 +35,7 @@ export const getAllRaceDays = async (req, res) => {
   }
 };
 
-export const getRaceDayById = async (res, req) => {
+export const getRaceDayById = async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
