@@ -1,5 +1,6 @@
 import express from 'express';
 import raceDayRoutes from './routes/raceDayRoutes';
+import versionRoute from './routes/versionRoute';
 
 const server = express();
 const router = express.Router();
@@ -10,6 +11,8 @@ server.get('/', (req, res) => {
 });
 
 raceDayRoutes(server);
+versionRoute(server);
 server.use('/racedays', router);
+server.use('/version', router);
 
 export default server;
