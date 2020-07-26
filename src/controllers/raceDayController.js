@@ -14,11 +14,11 @@ const okResponse = (res, data) => res.send({ code: 200, data });
 export const createRaceDay = async (req, res) => {
   const { body } = req;
 
-  if (!validateRaceDay(body)) {
-    return res.status(400).send({ code: 400, data: { ...body }});
-  }
-
   try {
+    if (!validateRaceDay(body)) {
+      return res.status(400).send({ code: 400, data: { ...body }});
+    }
+
     const id = await RaceDayService.createRaceDay(body);
     return res.status(201).send({ code: 201, data: { id }});
   } catch (e) {
