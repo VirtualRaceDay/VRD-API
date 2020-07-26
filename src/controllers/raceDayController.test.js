@@ -1,31 +1,29 @@
+import db from '../db';
 import * as RaceDayController from './raceDayController';
+import * as RaceDayService from '../services/raceDayService';
+import RaceDay from '../models/raceDayModel';
 
 const mockRace = {
-  date: Date.now(),
   name: 'name',
   pin: 'pin',
   races: [
     {}
   ],
   initialStake: 1,
-  maxPlayers: 1
+  maxPlayers: 1,
+  players: []
 };
-
-jest.mock('../services/raceDayService', () => ({
-  createRaceDay: jest.fn().mockImplementation(() => '012345678901234567890123'),
-  getAllRaceDays: jest.fn().mockImplementation(() => []),
-  getRaceDayById: jest.fn().mockImplementationOnce((_id) => ({
-    _id,
-    ...mockRace
-  })).mockImplementation(() => ({})),
-}));
 
 const res = {
   send: jest.fn().mockImplementation((payload) => payload)
 };
 res.status = jest.fn().mockImplementation(() => res);
 
+afterAll(async () => db.disconnect());
+
 describe('createRaceDay', () => {
+  afterAll(async () => RaceDay.deleteMany({}).exec());
+
   it('returns the id of a newly created race event', async () => {
     const req = {
       body: mockRace,
@@ -54,20 +52,27 @@ describe('createRaceDay', () => {
 });
 
 describe('getAllRaceDays', () => {
+  beforeAll(async () => RaceDayService.createRaceDay(mockRace));
+  afterAll(async () => RaceDay.deleteMany({}).exec());
+
   it('returns an array of races', async () => {
     const { code, data } = await RaceDayController.getAllRaceDays({}, res);
     expect(code).toBe(200);
-    expect(data).toStrictEqual([]);
+    expect(data).toHaveLength(1);
   });
 });
 
 describe('getRaceDayById', () => {
+  afterAll(async () => RaceDay.deleteMany({}).exec());
+
   it('returns the race if it has been found', async () => {
-    const req = { params: { id: '012345678901234567890123' } };
+    const id = await RaceDayService.createRaceDay(mockRace);
+
+    const req = { params: { id } };
 
     const { code, data } = await RaceDayController.getRaceDayById(req, res);
     expect(code).toBe(200);
-    expect(data).toStrictEqual({ _id: '012345678901234567890123', ...mockRace });
+    expect(data.toObject()).toStrictEqual({ _id: expect.anything(), ...mockRace, date: expect.any(Date), __v: expect.any(Number) });
   });
 
   it('returns 404 if the id is not supplied', async () => {
