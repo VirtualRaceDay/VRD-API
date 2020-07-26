@@ -7,7 +7,7 @@ const config = {
   PORT: process.env.PORT || 3000,
   HOSTNAME: process.env.HOSTNAME || 'localhost',
   CORS_ALLOWED_ORIGIN: process.env.CORS_ALLOWED_ORIGIN,
-  REDIS_URI: process.env.REDIS_URI,
+  REDIS_URI: process.env.REDIS_URI || process.env.REDISCLOUD_URL,
 };
 
 if (process.env.NODE_ENV === 'test') {

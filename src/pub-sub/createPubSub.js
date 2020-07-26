@@ -1,10 +1,11 @@
 import redis from 'redis';
 
+import config from '../config';
 import logger from '../logging';
 
 export default (topic) => {
-  const publisher = redis.createClient();
-  const subscriber = redis.createClient();
+  const publisher = redis.createClient(config.REDIS_URI);
+  const subscriber = redis.createClient(config.REDIS_URI);
 
   const publish = (message) => {
     publisher.publish(topic, JSON.stringify(message));
