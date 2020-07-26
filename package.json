@@ -6,10 +6,11 @@
   "scripts": {
     "build": "babel src --out-dir dist --ignore 'src/**/*.test.js'",
     "lint": "eslint 'src/**/*.js'",
-    "start": "npm-run-all lint build start:prod",
+    "start": "npm run start:prod",
     "start:prod": "node dist/index.js",
     "start:dev": "nodemon --exec babel-node -- src/index.js",
-    "test": "jest"
+    "test": "npm-run-all lint test:dev",
+    "test:dev": "jest"
   },
   "jest": {
     "transform": {
