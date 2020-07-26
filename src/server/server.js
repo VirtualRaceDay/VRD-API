@@ -1,10 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 
-import config from './config';
+import config from '../config';
 
-import raceDayRoutes from './routes/raceDayRoutes';
-import versionRoute from './routes/versionRoute';
+import raceDayRoutes from '../routes/raceDayRoutes';
+import versionRoute from '../routes/versionRoute';
 
 const initialise = () => {
   const server = express();

@@ -1,5 +1,6 @@
 import config from './config';
-import Server from './server';
+import logger from './logging';
+import Server from './server/server';
 
 const main = () => {
   const server = Server.initialise();
@@ -7,7 +8,7 @@ const main = () => {
   const { PORT, HOSTNAME } = config;
 
   server.listen(PORT, HOSTNAME, () => {
-    console.log(`Server listening at http://${HOSTNAME}:${PORT}`);
+    logger.info(`Server listening at http://${HOSTNAME}:${PORT}`);
   });
 };
 
