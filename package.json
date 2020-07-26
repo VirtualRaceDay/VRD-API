@@ -9,8 +9,8 @@
     "start": "npm run start:prod",
     "start:prod": "node dist/index.js",
     "start:dev": "nodemon --exec babel-node -- src/index.js",
-    "test": "npm-run-all lint test:dev",
-    "test:dev": "jest"
+    "test": "jest",
+    "test:dev": "npm-run-all lint test"
   },
   "jest": {
     "transform": {
