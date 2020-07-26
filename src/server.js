@@ -1,18 +1,33 @@
 import express from 'express';
+import cors from 'cors';
+
+import config from './config';
+
 import raceDayRoutes from './routes/raceDayRoutes';
 import versionRoute from './routes/versionRoute';
 
-const server = express();
-const router = express.Router();
-server.use(express.json());
+const initialise = () => {
+  const server = express();
+  const router = express.Router();
+  const corsMiddleware = cors({
+    origin: config.CORS_ALLOWED_ORIGIN,
+    optionsSuccessStatus: 200, // just in case someone uses IE 11 to access the API!
+  });
 
-server.get('/', (req, res) => {
-  res.status(200).send('OK');
-});
+  server.use(corsMiddleware);
+  server.use(express.json());
 
-raceDayRoutes(server);
-versionRoute(server);
-server.use('/racedays', router);
-server.use('/version', router);
+  server.get('/', (req, res) => {
+    res.status(200).send('OK');
+  });
 
-export default server;
+  raceDayRoutes(server);
+  versionRoute(server);
+
+  server.use('/racedays', router);
+  server.use('/version', router);
+
+  return server;
+};
+
+export default { initialise };
