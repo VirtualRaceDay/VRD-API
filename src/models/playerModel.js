@@ -11,5 +11,5 @@ export const PlayerSchema = new Schema({
   wagers: [WagerSchema],
 });
 
-const Player = model('players', PlayerSchema);
+const Player = model('player', PlayerSchema);
 export default Player;

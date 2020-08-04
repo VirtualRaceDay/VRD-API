@@ -16,6 +16,6 @@ export const RaceDaySchema = new Schema({
   races: Types.Object,
 });
 
-const RaceDay = model('racedays', RaceDaySchema);
+const RaceDay = model('raceday', RaceDaySchema);
 
 export default RaceDay;
