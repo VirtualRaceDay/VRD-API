@@ -1,6 +1,6 @@
 import db from '../db';
 
-import { PlayerSchema} from './playerModel';
+import { PlayerSchema } from './playerModel';
 
 const { model, Schema } = db;
 const { Types } = Schema;
