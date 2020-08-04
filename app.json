@@ -2,7 +2,8 @@
   "name": "Virtual Race Day - API",
   "description": "Backend services for Virtual Race Day",
   "addons": [
-    "mongolab"
+    "mongolab",
+    "rediscloud:30"
   ],
   "image": "heroku/nodejs",
   "repository": "https://github.com/VirtualRaceDay/VRD-API"

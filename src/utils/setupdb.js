@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+import logger from '../logging';
+
 /**
  * Connect to a mongoose database
  *
@@ -15,21 +17,22 @@ export default (mongoDbUri) => {
 
   // Log successful connection
   mongoose.connection.on('connected', () => {
-    console.log('Mongoose connection open to database');
+    logger.info(`Mongoose connection open to database at ${mongoDbUri}`);
   });
 
   // If the connection throws an error, log it
   mongoose.connection.on('error', (err) => {
-    console.error('Mongoose connection error', err);
+    logger.error('Mongoose connection error', err);
   });
 
   // Log disconnected
   mongoose.connection.on('disconnected', () => {
-    console.log('Mongoose connection disconnected');
+    logger.info('Mongoose connection disconnected');
   });
 
   // If the user attempts to close the app by terminating it then cleanup and exit
   process.on('SIGINT', () => {
+    logger.warn('SIGINT received, shutting down connection');
     mongoose.connection.close(() => {
       process.exit(0);
     });

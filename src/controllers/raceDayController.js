@@ -1,3 +1,5 @@
+import logger from '../logging';
+import * as Response from '../utils/responseUtils';
 import * as RaceDayService from '../services/raceDayService';
 
 const validateRaceDay = (raceDay) => (raceDay.name &&
@@ -7,31 +9,31 @@ const validateRaceDay = (raceDay) => (raceDay.name &&
   raceDay.initialStake &&
   raceDay.maxPlayers);
 
-const errorResponse = (res, message) => res.status(500).send({ code: 500, data: `Internal Server Error: ${message}`});
-const notFoundResponse = (res) => res.status(404).send({ code: 404, data: 'Id not found'});
-const okResponse = (res, data) => res.send({ code: 200, data });
-
 export const createRaceDay = async (req, res) => {
   const { body } = req;
 
   try {
     if (!validateRaceDay(body)) {
-      return res.status(400).send({ code: 400, data: { ...body }});
+      logger.warn(`createRaceDay: invalid raceDay payload from ${req.ip}`);
+      logger.warn(JSON.stringify(body, null, 2));
+      return Response.badRequest(res, body);
     }
 
     const id = await RaceDayService.createRaceDay(body);
-    return res.status(201).send({ code: 201, data: { id }});
+    return Response.created(res, { id });
   } catch (e) {
-    return errorResponse(res, e.message);
+    logger.error(`createRaceDay: ${e.message}`);
+    return Response.error(res, e.message);
   }
 };
 
 export const getAllRaceDays = async (req, res) => {
   try {
     const races = await RaceDayService.getAllRaceDays();
-    return okResponse(res, races);
+    return Response.ok(res, races);
   } catch (e) {
-    return errorResponse(res, e.message);
+    logger.error(`getAllRaceDays: ${e.message}`);
+    return Response.error(res, e.message);
   }
 };
 
@@ -39,17 +41,21 @@ export const getRaceDayById = async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return notFoundResponse(res);
+    logger.warn(`getRaceDayById: no race id provided by ${req.ip}`);
+    return Response.notFound(res, 'Id not found');
   }
 
   try {
     const race = await RaceDayService.getRaceDayById(id);
-    if (race._id) {
-      return okResponse(res, race);
+    if (race) {
+      return Response.ok(res, race);
     }
-    return notFoundResponse(res);
+
+    logger.warn(`getRaceDayById: id '${id}' requested by ${req.ip} does not exist`);
+    return Response.notFound(res, 'Id not found');
   } catch (e) {
-    return errorResponse(res, e.message);
+    logger.error(`getRaceDayById: ${e.message}`);
+    return Response.error(res, e.message);
   }
 };
 
@@ -58,32 +64,38 @@ export const updateRaceDay = async (res, req) => {
   const { body } = req;
 
   if (!id) {
-    return notFoundResponse(res);
-  }
-
-  if (!validateRaceDay(body)) {
-    return res.status(400).send({ code: 400, data: { ...body }});
+    logger.warn(`updateRaceDayById: no race id provided by ${req.ip}`);
+    return Response.notFound(res, 'Id not found');
   }
 
   try {
+    if (!validateRaceDay(body)) {
+      logger.warn(`updateRaceDayById: invalid raceDay payload from ${req.ip}`);
+      logger.warn(JSON.stringify(body, null, 2));
+      return Response.badRequest(res, body);
+    }
+  
     await RaceDayService.updateRaceDayById(id, body);
-    return okResponse(res, { id, ...body });
+    return Response.ok(res, { id, ...body });
   } catch (e) {
-    return errorResponse(res, e.message);
+    logger.error(`updateRaceDayById: ${e.message}`);
+    return Response.error(res, e.message);
   }
 };
 
-export const deleteRaceDay = async (res, req) => {
+export const deleteRaceDayById = async (res, req) => {
   const { id } = req.params;
 
   if (!id) {
-    return notFoundResponse(res);
+    logger.warn(`deleteRaceDayById: no race id provided by ${req.ip}`);
+    return Response.notFound(res, 'Id not found');
   }
 
   try {
     await RaceDayService.deleteRaceDayById(id);
-    return okResponse(res, { id });
+    return Response.ok(res, { id });
   } catch (e) {
-    return errorResponse(res, e.message);
+    logger.error(`deleteRaceDayById: ${e.message}`);
+    return Response.error(res, e.message);
   }
 };

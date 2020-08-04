@@ -1,14 +1,18 @@
 import config from './config';
-import Server from './server';
+import logger from './logging';
+import routes from './routes';
+import Server from './server/server';
+import WebSocketServer from './server/webSocketServer';
 
 const main = () => {
-  const server = Server.initialise();
-
   const { PORT, HOSTNAME } = config;
+  const server = Server.initialise();
+  server.use('/', routes);
 
-  server.listen(PORT, HOSTNAME, () => {
-    console.log(`Server listening at http://${HOSTNAME}:${PORT}`);
+  const listener = server.listen(PORT, HOSTNAME, () => {
+    logger.info(`Server listening at http://${HOSTNAME}:${PORT}`);
   });
+  WebSocketServer.initialise(listener);
 };
 
 main();
