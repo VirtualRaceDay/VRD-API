@@ -3,12 +3,12 @@ import RaceDay from '../models/raceDayModel';
 export const createRaceDay = async (raceDay) => {
   const newRaceday = new RaceDay(raceDay);
   await newRaceday.save();
-  return newRaceday['_id'].toHexString();
+  return newRaceday.id;
 };
 
 export const getAllRaceDays = () => RaceDay.find().exec();
 
-export const getRaceDayById = (_id) => RaceDay.findById(_id).exec();
+export const getRaceDayById = (id) => RaceDay.findById(id).exec();
 
 export const getRaceDayByPin = (pin) => RaceDay.findOne({ pin }).exec();
 

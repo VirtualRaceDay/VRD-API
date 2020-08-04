@@ -23,10 +23,12 @@ export const createNewPlayer = async (req, res) => {
       logger.warn(`createNewPlayer: race for pin ${pin} not found`);
       return Response.notFound(res, 'No race for this pin');
     }
-    const newPlayer = PlayerService.createPlayer(nickname, raceDay.get('initialStake'));
+
+    const newPlayer = PlayerService.createPlayer(nickname, raceDay);
     const id = await PlayerService.addPlayerToRace(newPlayer, raceDay);
     PlayerListPubSub.publish(newPlayer);
-    return Response.created(res, { id });
+
+    return Response.created(res, { playerId: id, raceDayId: raceDay.id });
   } catch (e) {
     logger.error(`createNewPlayer: ${e.message}`);
     return Response.error(res, e.message);
