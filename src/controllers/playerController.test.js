@@ -1,6 +1,7 @@
 import db from '../db';
 import * as PlayerController from './playerController';
 import { createRaceDay } from '../services/raceDayService';
+import RaceDay from '../models/raceDayModel';
 
 const mockRace = {
   date: Date.now(),
@@ -24,11 +25,14 @@ const res = {
 };
 res.status = jest.fn().mockImplementation(() => res);
 
-beforeAll(async () => createRaceDay(mockRace));
 afterAll(async () => db.disconnect());
 
 describe('createNewPlayer', () => {
-  it('returns the id of a newly created player', async () => {
+  beforeAll(async () => {
+    await RaceDay.deleteMany({}).exec();
+    await createRaceDay(mockRace);
+  });
+  it('returns the id of a newly created player, with the id of the race they have joined', async () => {
     const req = {
       body: {
         pin: 'pin',
@@ -38,7 +42,8 @@ describe('createNewPlayer', () => {
 
     const { code, data } = await PlayerController.createNewPlayer(req, res);
     expect(code).toBe(201);
-    expect(data.id).toHaveLength(24);
+    expect(data.playerId).toHaveLength(24);
+    expect(data.raceDayId).toHaveLength(24);
   });
 
   it('returns a 400 response when an invalid race event is given', async () => {
