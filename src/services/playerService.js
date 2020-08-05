@@ -12,7 +12,8 @@ export const createPlayer = (name, raceDay) => {
 };
 
 export const addPlayerToRace = async (player, raceDay) => {
-  raceDay.players.addToSet(player);
+  await player.save();
+  raceDay.players.addToSet(player._id);
   await raceDay.save();
   return player.id;
 };
