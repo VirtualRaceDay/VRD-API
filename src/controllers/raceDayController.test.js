@@ -2,7 +2,7 @@ import db from '../db';
 import * as RaceDayController from './raceDayController';
 import * as RaceDayService from '../services/raceDayService';
 
-import { addPlayerToRace, createPlayer } from '../services/playerService';
+import { createPlayer } from '../services/playerService';
 import RaceDay from '../models/raceDayModel';
 
 const mockRace = {
