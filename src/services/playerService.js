@@ -17,3 +17,7 @@ export const addPlayerToRace = async (player, raceDay) => {
   await raceDay.save();
   return player.id;
 };
+
+export const getPlayerById = async (id) => {
+  return await Player.findById(id).exec();
+};

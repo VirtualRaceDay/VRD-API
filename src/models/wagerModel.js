@@ -6,10 +6,8 @@ const { Types } = Schema;
 export const WagerSchema = new Schema({
   race: Types.ObjectId,
   horseNumber: Types.Number,
-  wager: Types.Number,
-  odds: Types.Number,
-  outcome: Types.Number,
+  amount: Types.Number
 });
 
-const Wager = model('wagers', WagerSchema);
+const Wager = model('wager', WagerSchema);
 export default Wager;
