@@ -1,7 +1,5 @@
 import db from '../db';
 
-import { PlayerSchema} from './playerModel';
-
 const { model, Schema } = db;
 const { Types } = Schema;
 
@@ -12,10 +10,10 @@ export const RaceDaySchema = new Schema({
   pin: Types.String,
   initialStake: Types.Number,
   maxPlayers: Types.Number,
-  players: [PlayerSchema],
+  players: [{ type: Types.ObjectId, ref: 'player' }],
   races: Types.Object,
 });
 
-const RaceDay = model('racedays', RaceDaySchema);
+const RaceDay = model('raceday', RaceDaySchema);
 
 export default RaceDay;

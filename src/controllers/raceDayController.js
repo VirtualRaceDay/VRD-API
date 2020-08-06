@@ -99,3 +99,26 @@ export const deleteRaceDayById = async (res, req) => {
     return Response.error(res, e.message);
   }
 };
+
+export const getLeaderboardForRace = async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    logger.warn(`getAllPlayersForRaceEvent: no race id provided by ${req.ip}`);
+    return Response.notFound(res, 'Id not found');
+  }
+
+  try {
+    const raceDay = await RaceDayService.getRaceDayById(id);
+    if (!raceDay) {
+      logger.warn(`getAllPlayersForRaceEvent: id '${id}' requested by ${req.ip} does not exist`);
+      return Response.notFound(res, 'Id not found');
+    }
+
+    const players = await RaceDayService.getLeaderboardForRace(raceDay);
+    return Response.ok(res, { currency: raceDay.currency, players });
+  } catch (e) {
+    logger.error(`getAllPlayersForRaceEvent: ${e.message}`);
+    return Response.error(res, e.message);
+  }
+};
