@@ -50,6 +50,7 @@ export const getWagers = async (req, res) => {
   }
 };
 
+// Not currently in use as we are using the bullk insert function instead
 export const createWager = async (req, res) => {
   const { body } = req;
   const { player } = body;
@@ -70,6 +71,55 @@ export const createWager = async (req, res) => {
   }
   catch (e) {
     return ResponseError.internalServerRequestError(`createWager: ${e.message}`);
+  }
+};
+
+export const createWagersBulk = async (req, res) => {
+  const { body } = req;
+
+  try {
+    console.log('BODY: ', body);
+
+    if (!body)
+      return ResponseError.badRequestError(`createWagersBulk: invalid wagers payload from ${req.ip}`, res, body);
+
+    const { wagers, race, player } = body;
+
+    if (!wagers || !race || !player)
+      return ResponseError.badRequestError(`createWagersBulk: invalid wagers, raceId or playerId from ${req.ip}`, res, body);
+
+    const foundPlayer = await PlayerService.getPlayerById(player);
+
+    if (!foundPlayer)
+      return ResponseError.notFoundRequestError(`createWager: player not found for id: ${player}`);
+
+    const wagersToAdd = wagers.map(wager => {
+      if (!wager.horseNumber || !wager.amount)
+        throw new Error(`Invalid wager inputs values for horse ${wager.horseNumber} and amount ${wager.amount}`);
+
+      wager.race = race;
+      wager.player = player;
+
+      return wager;
+    });
+    //.then(data => console.log('DATA: ', data));
+
+    console.log('Wagers to add: ', wagersToAdd);
+
+    //console.log('NEW WAGERS: ', newWagers);
+    let newWagers = [];
+
+    for (let i = 0; i < wagersToAdd.length; i++) {
+      const newWager = await WagerService.createWager(wagersToAdd[i]);
+      await WagerService.addWagerToPlayer(foundPlayer, newWager);
+
+      newWagers.push(newWager);
+    }
+
+    return Response.ok(res, { wagers: newWagers });
+  }
+  catch (e) {
+    return ResponseError.internalServerRequestError(`createWagersBulk: ${e.message}`, res);
   }
 };
 
