@@ -10,6 +10,15 @@ export const addWagerToPlayer = async (player, wager) => {
   return;
 };
 
+export const updateWager = async (currentWager, updateWager) => {
+  //We should only be able to update the horse number and amount
+  currentWager.horseNumber = updateWager.horseNumber;
+  currentWager.amount = updateWager.amount;
+
+  await currentWager.save();
+  return;
+};
+
 export const deleteWager = async (player, wagerId) => {
   await player.wagers.pull({ _id: wagerId });
   await player.save();
@@ -27,4 +36,8 @@ export const getRaceWagers = async (player, race) => {
   }).execPopulate();
 
   return playerWagers.wagers;
+};
+
+export const getWagerById = async (id) => {
+  return await Wager.findById(id).exec();
 };
