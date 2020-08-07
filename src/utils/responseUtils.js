@@ -5,4 +5,4 @@ export const badRequest = (res, data) => res.status(400).send({ code: 400, data 
 export const ok = (res, data) => res.send({ code: 200, data });
 export const created = (res, data) => res.status(201).send({ code: 201, data });
 export const deleted = (res, data) => res.status(200).send({ code: 200, data });
-export const updated = (res) => res.status(204).send({ code: 204 });
+export const updated = (res, data) => res.status(200).send({ code: 200, data });

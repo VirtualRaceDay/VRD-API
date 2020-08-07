@@ -93,7 +93,7 @@ export const updateWager = async (req, res) => {
 
     WagerService.updateWager(foundWager, body);
 
-    return Response.updated(res);
+    return Response.updated(res, foundWager);
   }
   catch (e) {
     return ResponseError.internalServerRequestError(`updateWager: ${e.message}`, res);
@@ -102,20 +102,22 @@ export const updateWager = async (req, res) => {
 
 export const deleteWager = async (req, res) => {
   const { body } = req;
-  const { wager, player } = body;
+  const { player } = body;
+  const { id } = req.params;
 
   try {
-    if (!wager || !player)
-      return ResponseError.badRequestError(`deleteWager: invalid wager payload from ${req.ip}`, res, body);
+    if (!id || !player)
+      return ResponseError.badRequestError(`deleteWager: invalid wager payload from ${req.ip}`, res, { body, id });
 
     const foundPlayer = await PlayerService.getPlayerById(player);
 
     if (!foundPlayer)
-      return ResponseError.notFoundRequestError(`deleteWager: player not found for id: ${player}`, res, body);
+      return ResponseError.notFoundRequestError(`deleteWager: player not found for id: ${player}`, res, { body, id });
 
 
-    await WagerService.deleteWager(foundPlayer, wager);
-    return Response.deleted(res, { id: wager });
+    await WagerService.deleteWager(foundPlayer, id);
+
+    return Response.deleted(res, { id });
   } catch (e) {
     return ResponseError(`deleteWager: ${e.message}`, res);
   }
