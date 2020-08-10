@@ -1,7 +1,6 @@
 import logger from '../logging';
 import * as Response from '../utils/responseUtils';
 import * as RaceDayService from '../services/raceDayService';
-import * as RaceService from '../services/raceService';
 
 const validateRaceDay = (raceDay) => (raceDay.name &&
   raceDay.pin &&
@@ -11,22 +10,15 @@ const validateRaceDay = (raceDay) => (raceDay.name &&
 
 export const createRaceDay = async (req, res) => {
   const { body } = req;
-  const { raceDay, races } = body;
 
   try {
-    if (!validateRaceDay(raceDay)) {
+    if (!validateRaceDay(body)) {
       logger.warn(`createRaceDay: invalid raceDay payload from ${req.ip}`);
       logger.warn(JSON.stringify(body, null, 2));
       return Response.badRequest(res, body);
     }
 
-    const id = await RaceDayService.createRaceDay(raceDay);
-    const raceCard = await RaceDayService.getRaceDayById(id);
-
-    for (let i = 0; i < races.length; i++) {
-      const newRace = await RaceService.createRace(races[i]);
-      await RaceService.addRaceToRaceCard(raceCard, newRace);
-    }
+    const id = await RaceDayService.createRaceDay(body);
 
     return Response.created(res, { id });
   } catch (e) {
