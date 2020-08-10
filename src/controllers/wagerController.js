@@ -84,7 +84,7 @@ export const createWagersBulk = async (req, res) => {
     const { wagers, player } = body;
 
     if (!wagers || !player)
-      return ResponseError.badRequestError(`createWagersBulk: invalid wagers, raceId or playerId from ${req.ip}`, res, body);
+      return ResponseError.badRequestError(`createWagersBulk: invalid wagers,or playerId from ${req.ip}`, res, body);
 
     const foundPlayer = await PlayerService.getPlayerById(player);
 
