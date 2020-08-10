@@ -30,18 +30,18 @@ export const getWagerById = async (req, res) => {
 
 export const getWagers = async (req, res) => {
   const { body } = req;
-  const { player, race } = body;
+  const { race } = body;
 
   try {
-    if (!player || !race)
+    if (!race)
       return ResponseError.badRequestError(`getWagers: invalid wager payload from ${req.ip}`, res, body);
 
-    const foundPlayer = await PlayerService.getPlayerById(player);
+    const foundPlayer = await PlayerService.getPlayerById(body.player);
 
     if (!foundPlayer)
       return ResponseError.notFoundRequestError('getWagers: player not found', res, body);
 
-    const wagers = await WagerService.getRaceWagers(foundPlayer, race);
+    const wagers = await WagerService.getPlayerRaceWagers(foundPlayer, race);
 
     return Response.ok(res, { wagers });
   }

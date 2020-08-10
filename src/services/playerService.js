@@ -21,3 +21,13 @@ export const addPlayerToRace = async (player, raceDay) => {
 export const getPlayerById = async (id) => {
   return await Player.findById(id).exec();
 };
+
+export const getPlayerByWagerId = async (player, wager) => {
+  const playerWagers = await Player.populate({
+    path: 'wagers',
+    select: '_id race amount horseNumber',
+    match: { wager }
+  }).execPopulate();
+
+  return playerWagers;
+};

@@ -40,15 +40,21 @@ export const getPlayerRaceWagers = async (player, race) => {
 export const getRaceWinningWagers = async (race) => {
   const wagers = await Wager.find({ race: race._id });
 
-  const winningHorseNumber = race.horses.find((horse) => {
+  const winningHorse = race.horses.find((horse) => {
     return horse.winner = true;
   });
 
-  const winningWagers = wagers.filter((wager) => {
-    return wager.horseNumber == winningHorseNumber.number;
+  let winningWagers = wagers.filter((wager) => {
+    return wager.horseNumber == winningHorse.number;
   });
 
-  return winningWagers;
+  const wagersWithWinnings = winningWagers.map((wager) => {
+    const winnings = ((wager.amount) * winningHorse.odds) + wager.amount;
+
+    return { wager, winnings };
+  });
+
+  return wagersWithWinnings;
 };
 
 export const getWagerById = async (id) => {
