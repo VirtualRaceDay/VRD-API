@@ -24,7 +24,7 @@ export const getWagerById = async (req, res) => {
     return Response.ok(res, { wager });
   }
   catch (e) {
-    return Response.internalServerRequestError(`getWagerById: ${e.message}`);
+    return ResponseError.internalServerRequestError(`getWagerById: ${e.message}`);
   }
 };
 
@@ -46,7 +46,7 @@ export const getWagers = async (req, res) => {
     return Response.ok(res, { wagers });
   }
   catch (e) {
-    return ResponseError.internalServerRequestError(`getWagers: ${e.message}`);
+    return ResponseError.internalServerRequestError(`getWagers: ${e.message}`, res);
   }
 };
 
@@ -78,14 +78,12 @@ export const createWagersBulk = async (req, res) => {
   const { body } = req;
 
   try {
-    console.log('BODY: ', body);
-
     if (!body)
       return ResponseError.badRequestError(`createWagersBulk: invalid wagers payload from ${req.ip}`, res, body);
 
-    const { wagers, race, player } = body;
+    const { wagers, player } = body;
 
-    if (!wagers || !race || !player)
+    if (!wagers || !player)
       return ResponseError.badRequestError(`createWagersBulk: invalid wagers, raceId or playerId from ${req.ip}`, res, body);
 
     const foundPlayer = await PlayerService.getPlayerById(player);
@@ -97,16 +95,11 @@ export const createWagersBulk = async (req, res) => {
       if (!wager.horseNumber || !wager.amount)
         throw new Error(`Invalid wager inputs values for horse ${wager.horseNumber} and amount ${wager.amount}`);
 
-      wager.race = race;
       wager.player = player;
 
       return wager;
     });
-    //.then(data => console.log('DATA: ', data));
 
-    console.log('Wagers to add: ', wagersToAdd);
-
-    //console.log('NEW WAGERS: ', newWagers);
     let newWagers = [];
 
     for (let i = 0; i < wagersToAdd.length; i++) {

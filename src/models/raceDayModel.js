@@ -11,7 +11,7 @@ export const RaceDaySchema = new Schema({
   initialStake: Types.Number,
   maxPlayers: Types.Number,
   players: [{ type: Types.ObjectId, ref: 'player' }],
-  races: Types.Object,
+  races: [{ type: Types.ObjectId, ref: 'race' }],
 });
 
 const RaceDay = model('raceday', RaceDaySchema);
