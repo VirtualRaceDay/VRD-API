@@ -8,7 +8,11 @@ export const createRaceDay = async (raceDay) => {
 
 export const getAllRaceDays = () => RaceDay.find().exec();
 
-export const getRaceDayById = (id) => RaceDay.findById(id).exec();
+export const getRaceDayById = async (id) => {
+  const raceDay = await RaceDay.findById(id).exec();
+  const populatedRaces = await raceDay.populate('races', '_id name link horses').execPopulate();
+  return populatedRaces;
+};
 
 export const getRaceDayByPin = (pin) => RaceDay.findOne({ pin }).exec();
 

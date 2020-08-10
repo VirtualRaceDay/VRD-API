@@ -27,8 +27,7 @@ export const deleteWager = async (player, wagerId) => {
   return;
 };
 
-export const getRaceWagers = async (player, race) => {
-  //const wagers = [];
+export const getPlayerRaceWagers = async (player, race) => {
   const playerWagers = await player.populate({
     path: 'wagers',
     select: '_id race amount horseNumber',
@@ -36,6 +35,26 @@ export const getRaceWagers = async (player, race) => {
   }).execPopulate();
 
   return playerWagers.wagers;
+};
+
+export const getRaceWinningWagers = async (race) => {
+  const wagers = await Wager.find({ race: race._id });
+
+  const winningHorse = race.horses.find((horse) => {
+    return horse.winner = true;
+  });
+
+  let winningWagers = wagers.filter((wager) => {
+    return wager.horseNumber == winningHorse.number;
+  });
+
+  const wagersWithWinnings = winningWagers.map((wager) => {
+    const winnings = ((wager.amount) * winningHorse.odds) + wager.amount;
+
+    return { wager, winnings };
+  });
+
+  return wagersWithWinnings;
 };
 
 export const getWagerById = async (id) => {
