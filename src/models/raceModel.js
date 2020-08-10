@@ -7,6 +7,7 @@ export const RaceSchema = new Schema({
   name: Types.String,
   link: Types.String,
   horses: Types.Object,
+  state: Types.String
 });
 
 const Race = model('race', RaceSchema);

@@ -2,6 +2,7 @@ import * as Response from '../utils/responseUtils';
 import * as ResponseError from '../utils/responseErrorUtils';
 import * as RaceDayService from '../services/raceDayService';
 import * as RaceService from '../services/raceService';
+import EventStatusPubSub from '../pub-sub/eventState';
 
 const validateRace = (race) => (
   race.name &&
@@ -34,5 +35,36 @@ export const createRace = async (req, res) => {
   }
   catch (e) {
     return ResponseError.internalServerRequestError(`createRace: ${e}`, res);
+  }
+};
+export const startRace = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!id)
+      return ResponseError.badRequestError(`startRace: bad payload for race from ${req.ip}`, res, req.params);
+
+    RaceService.updateRaceState(id, 'started');
+    EventStatusPubSub.publish('started');
+    return Response.noContent(res, null);
+  }
+  catch (e) {
+    return ResponseError.internalServerRequestError(`startRace: ${e.message}`, res);
+  }
+};
+
+export const finishRace = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!id)
+      return ResponseError.badRequestError(`finishRace: bad payload for race from ${req.ip}`, res, req.params);
+
+    RaceService.updateRaceState(id, 'finished');
+    EventStatusPubSub.publish('finished');
+    return Response.noContent(res, null);
+  }
+  catch (e) {
+    return ResponseError.internalServerRequestError(`finishRace: ${e.message}`, res);
   }
 };

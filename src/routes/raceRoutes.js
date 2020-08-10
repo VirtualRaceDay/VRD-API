@@ -6,8 +6,11 @@ raceRoutes.route('/race')
   //.get((req, res) => RaceController.getAllRaces(req, res))
   .post((req, res) => RaceController.createRace(req, res));
 
-// raceDayRoutes.route('/raceday/:id/leaderboard')
-//   .get((req, res) => RaceDayController.getLeaderboardForRace(req, res));
+raceRoutes.route('/race/:id/start')
+  .put((req, res) => RaceController.startRace(req, res));
+
+raceRoutes.route('/race/:id/finish')
+  .put((req, res) => RaceController.finishRace(req, res));
 
 // raceDayRoutes.route('/raceday/:id')
 //   .get((req, res) => RaceDayController.getRaceDayById(req, res))
