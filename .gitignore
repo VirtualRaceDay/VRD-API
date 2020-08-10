@@ -108,3 +108,5 @@ dist
 
 # macOS finder file
 .DS_Store
+
+docker-compose.yaml
