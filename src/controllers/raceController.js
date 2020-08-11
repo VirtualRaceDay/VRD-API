@@ -68,3 +68,23 @@ export const finishRace = async (req, res) => {
     return ResponseError.internalServerRequestError(`finishRace: ${e.message}`, res);
   }
 };
+
+export const getRaceById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!id) {
+      return Response.badRequest(res, 'Id not specified');
+    }
+
+    const race = await RaceService.getRaceById(id);
+
+    if (!race) {
+      return Response.notFound(res, 'Id not found');
+    }
+
+    return Response.ok(res, race);
+  } catch (e) {
+    return Response.error(res, e.message);
+  }
+};
