@@ -40,12 +40,12 @@ export const getAllRaceDays = async (req, res) => {
 export const getRaceDayById = async (req, res) => {
   const { id } = req.params;
 
-  if (!id) {
-    logger.warn(`getRaceDayById: no race id provided by ${req.ip}`);
-    return Response.notFound(res, 'Id not found');
-  }
-
   try {
+    if (!id) {
+      logger.warn(`getRaceDayById: no race id provided by ${req.ip}`);
+      return Response.badRequest(res, 'Id not specified');
+    }
+
     const race = await RaceDayService.getRaceDayById(id);
 
     if (!race) {
@@ -104,22 +104,23 @@ export const deleteRaceDayById = async (res, req) => {
 export const getLeaderboardForRace = async (req, res) => {
   const { id } = req.params;
 
-  if (!id) {
-    logger.warn(`getAllPlayersForRaceEvent: no race id provided by ${req.ip}`);
-    return Response.notFound(res, 'Id not found');
-  }
-
   try {
+    if (!id) {
+      logger.warn(`getLeaderboardForRace: no race id provided by ${req.ip}`);
+      return Response.badRequest(res, 'Id not specified');
+    }
+
     const raceDay = await RaceDayService.getRaceDayById(id);
+
     if (!raceDay) {
-      logger.warn(`getAllPlayersForRaceEvent: id '${id}' requested by ${req.ip} does not exist`);
+      logger.warn(`getLeaderboardForRace: id '${id}' requested by ${req.ip} does not exist`);
       return Response.notFound(res, 'Id not found');
     }
 
     const players = await RaceDayService.getLeaderboardForRace(raceDay);
     return Response.ok(res, { currency: raceDay.currency, players });
   } catch (e) {
-    logger.error(`getAllPlayersForRaceEvent: ${e.message}`);
+    logger.error(`getLeaderboardForRace: ${e.message}`);
     return Response.error(res, e.message);
   }
 };

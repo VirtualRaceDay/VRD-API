@@ -10,6 +10,9 @@ export const getAllRaceDays = () => RaceDay.find().exec();
 
 export const getRaceDayById = async (id) => {
   const raceDay = await RaceDay.findById(id).exec();
+
+  if (!raceDay) return null;
+
   const populatedRaces = await raceDay.populate('races', '_id name link horses state').execPopulate();
   return populatedRaces;
 };
