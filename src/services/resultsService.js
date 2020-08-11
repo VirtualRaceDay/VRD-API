@@ -2,7 +2,7 @@ import * as WagerService from './wagerService';
 import * as RaceService from './raceService';
 import * as PlayerService from './playerService';
 
-export const getResults = async (raceId) => {
+export const updateResults = async (raceId) => {
   //get Race
   const race = await RaceService.getRaceById(raceId);
 
@@ -19,7 +19,7 @@ export const getResults = async (raceId) => {
     player.save();
   }
 
-  return winningWagers;
+  return;
 };
 
 

@@ -1,9 +1,9 @@
-import express from 'express';
-import * as ResultsController from '../controllers/resultsController';
+// import express from 'express';
+// //import * as ResultsController from '../controllers/resultsController';
 
-const resultRoutes = express.Router();
+// const resultRoutes = express.Router();
 
-resultRoutes.route('/result/:id')
-  .post((req, res) => ResultsController.processWinningBets(req, res));
+// // resultRoutes.route('/result/:id')
+// //   .post((req, res) => ResultsController.processWinningBets(req, res));
 
-export default resultRoutes;
+// export default resultRoutes;
