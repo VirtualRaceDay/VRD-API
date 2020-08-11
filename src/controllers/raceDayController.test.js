@@ -3,18 +3,17 @@ import * as RaceDayController from './raceDayController';
 import * as RaceDayService from '../services/raceDayService';
 
 import { createPlayer } from '../services/playerService';
+import { createRace } from '../services/raceService';
 import RaceDay from '../models/raceDayModel';
 
-const mockRace = {
+const mockRaceDay = {
+  currency: 'RBX',
   name: 'name',
   pin: 'pin',
-  currency: 'RBX',
-  races: [
-    {}
-  ],
   initialStake: 1,
   maxPlayers: 1,
-  players: []
+  players: [],
+  races: [],
 };
 
 const mockPlayerNames = ['Alice', 'Bob', 'Carol'];
@@ -31,7 +30,7 @@ describe('createRaceDay', () => {
 
   it('returns the id of a newly created race event', async () => {
     const req = {
-      body: mockRace,
+      body: mockRaceDay,
     };
 
     const { code, data } = await RaceDayController.createRaceDay(req, res);
@@ -40,7 +39,7 @@ describe('createRaceDay', () => {
   });
 
   it('returns a 400 response when an invalid race event is given', async () => {
-    const req = { body: {}};
+    const req = { body: {} };
 
     const { code, data } = await RaceDayController.createRaceDay(req, res);
     expect(code).toBe(400);
@@ -59,10 +58,19 @@ describe('createRaceDay', () => {
 describe('getAllRaceDays', () => {
   beforeAll(async () => {
     await RaceDay.deleteMany({}).exec();
-    await RaceDayService.createRaceDay(mockRace);
+    await RaceDayService.createRaceDay(mockRaceDay);
   });
 
   it('returns an array of races', async () => {
+    beforeAll(async () => {
+      await createRace({
+        name: 'race',
+        link: 'link',
+        horses: [],
+        state: 'not-started'
+      });
+    });
+
     const { code, data } = await RaceDayController.getAllRaceDays({}, res);
     expect(code).toBe(200);
     expect(data).toHaveLength(1);
@@ -73,25 +81,25 @@ describe('getRaceDayById', () => {
   beforeAll(async () => RaceDay.deleteMany({}).exec());
 
   it('returns the race if it has been found', async () => {
-    const id = await RaceDayService.createRaceDay(mockRace);
+    const id = await RaceDayService.createRaceDay(mockRaceDay);
 
     const req = { params: { id } };
 
     const { code, data } = await RaceDayController.getRaceDayById(req, res);
     expect(code).toBe(200);
-    expect(data.toObject()).toStrictEqual({ _id: expect.anything(), ...mockRace, date: expect.any(Date), __v: expect.any(Number) });
+    expect(data.toObject()).toStrictEqual({ _id: expect.anything(), ...mockRaceDay, date: expect.any(Date), __v: expect.any(Number) });
   });
 
-  it('returns 404 if the id is not supplied', async () => {
+  it('returns 400 (bad request) if the id is not supplied', async () => {
     const req = { params: {} };
 
     const { code, data } = await RaceDayController.getRaceDayById(req, res);
-    expect(code).toBe(404);
-    expect(data).toBe('Id not found');
+    expect(code).toBe(400);
+    expect(data).toBe('Id not specified');
   });
 
   it('returns 404 if the id does not exist in the database', async () => {
-    const req = { params: { id: '321098765432109876543210'} };
+    const req = { params: { id: '321098765432109876543210' } };
 
     const { code, data } = await RaceDayController.getRaceDayById(req, res);
     expect(code).toBe(404);
@@ -103,7 +111,7 @@ describe('getLeaderboardForRace', () => {
   let race;
   beforeAll(async () => {
     await RaceDay.deleteMany({});
-    race = await (new RaceDay(mockRace)).save();
+    race = await (new RaceDay(mockRaceDay)).save();
     const players = await Promise.all(mockPlayerNames.map((name) => createPlayer(name, race).save()));
     race.players = players.map((player) => player._id);
     await race.save();
@@ -128,16 +136,16 @@ describe('getLeaderboardForRace', () => {
     expect(receivedPlayers).toMatchObject(expectedPlayers);
   });
 
-  it('returns 404 if the id is not supplied', async () => {
+  it('returns 400 (bad request) if the id is not supplied', async () => {
     const req = { params: {} };
 
     const { code, data } = await RaceDayController.getLeaderboardForRace(req, res);
-    expect(code).toBe(404);
-    expect(data).toBe('Id not found');
+    expect(code).toBe(400);
+    expect(data).toBe('Id not specified');
   });
 
   it('returns 404 if the id does not exist in the database', async () => {
-    const req = { params: { id: '321098765432109876543210'} };
+    const req = { params: { id: '321098765432109876543210' } };
 
     const { code, data } = await RaceDayController.getLeaderboardForRace(req, res);
     expect(code).toBe(404);
