@@ -12,6 +12,9 @@ raceRoutes.route('/race/:id/start')
 raceRoutes.route('/race/:id/finish')
   .put((req, res) => RaceController.finishRace(req, res));
 
+raceRoutes.route('/race/:id')
+  .get((req, res) => RaceController.getRaceById(req, res));
+
 // raceDayRoutes.route('/raceday/:id')
 //   .get((req, res) => RaceDayController.getRaceDayById(req, res))
 //   .put((req, res) => RaceDayController.updateRaceDay(req, res))
