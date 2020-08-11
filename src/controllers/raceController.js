@@ -2,6 +2,8 @@ import * as Response from '../utils/responseUtils';
 import * as ResponseError from '../utils/responseErrorUtils';
 import * as RaceDayService from '../services/raceDayService';
 import * as RaceService from '../services/raceService';
+import * as ResultsService from '../services/resultsService';
+
 import EventStatusPubSub from '../pub-sub/eventState';
 
 const validateRace = (race) => (
@@ -61,6 +63,10 @@ export const finishRace = async (req, res) => {
       return ResponseError.badRequestError(`finishRace: bad payload for race from ${req.ip}`, res, req.params);
 
     RaceService.updateRaceState(id, 'finished');
+
+    // Update player balances on a win
+    ResultsService.updateResults(id);
+
     EventStatusPubSub.publish('finished');
     return Response.noContent(res, null);
   }
