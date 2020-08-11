@@ -11,7 +11,7 @@ export const getPodium = async (req, res) => {
   const { id } = req.params;
 
   try {
-    if (!id)
+    if (!id || id == 'undefined')
       return ResponseError.badRequestError(`getPodium: id not specified from ${req.ip}}`, res, req.params);
 
     let raceDay = await RaceDayService.getRaceDayById(id);
@@ -23,6 +23,7 @@ export const getPodium = async (req, res) => {
     return Response.ok(res, podium);
   }
   catch (e) {
-    return ResponseError.internalServerRequestError(`getpodium: ${e.message}`, res);
+    return ResponseError.internalServerRequestError(`getPodium: ${e}`, res);
+    //return ResponseError.internalServerRequestError(`getPodium: ${e.message}`, res);
   }
 };
