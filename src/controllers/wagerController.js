@@ -81,9 +81,9 @@ export const createWagersBulk = async (req, res) => {
     if (!body)
       return ResponseError.badRequestError(`createWagersBulk: invalid wagers payload from ${req.ip}`, res, body);
 
-    const { wagers, player } = body;
+    const { wagers, player, race } = body;
 
-    if (!wagers || !player)
+    if (!wagers || !player || !race)
       return ResponseError.badRequestError(`createWagersBulk: invalid wagers,or playerId from ${req.ip}`, res, body);
 
     const foundPlayer = await PlayerService.getPlayerById(player);
@@ -91,6 +91,15 @@ export const createWagersBulk = async (req, res) => {
     if (!foundPlayer)
       return ResponseError.notFoundRequestError(`createWager: player not found for id: ${player}`);
 
+    // Get current wagers for the player or the current race
+    const currentWagers = await WagerService.getPlayerRaceWagers(foundPlayer, race);
+
+    if (currentWagers) {
+      // remove wagers for the current player for the current race
+      currentWagers.forEach(async wager => {
+        await WagerService.removeWager(foundPlayer, wager);
+      });
+    }
     const wagersToAdd = wagers.map(wager => {
       if (!wager.horseNumber || !wager.amount)
         throw new Error(`Invalid wager inputs values for horse ${wager.horseNumber} and amount ${wager.amount}`);
@@ -115,6 +124,7 @@ export const createWagersBulk = async (req, res) => {
     return ResponseError.internalServerRequestError(`createWagersBulk: ${e.message}`, res);
   }
 };
+
 
 // This endpoint may not be used currently but is here for completness of the API and for future functionality 
 export const updateWager = async (req, res) => {

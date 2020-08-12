@@ -1,4 +1,5 @@
 import Wager from '../models/wagerModel';
+import Player from '../models/playerModel';
 
 export const createWager = async (wager) => new Wager(wager);
 
@@ -17,14 +18,6 @@ export const updateWager = async (currentWager, updateWager) => {
   currentWager.amount = updateWager.amount;
 
   await currentWager.save();
-  return;
-};
-
-export const deleteWager = async (player, wagerId) => {
-  await player.wagers.pull({ _id: wagerId });
-  await player.save();
-
-  await Wager.deleteOne({ _id: wagerId }).exec();
   return;
 };
 
@@ -60,4 +53,13 @@ export const getRaceWinningWagers = async (race) => {
 
 export const getWagerById = async (id) => {
   return await Wager.findById(id).exec();
+};
+
+export const removeWager = async (player, wager) => {
+  player.currentFunds = wager.amount;
+
+  const id = wager._id;
+  await Wager.deleteOne({ _id: id }).exec();
+  await Player.updateOne({ _id: player._id }, { $pull: { wagers: id } });
+  return;
 };
