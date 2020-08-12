@@ -5,6 +5,7 @@ export const createWager = async (wager) => new Wager(wager);
 export const addWagerToPlayer = async (player, wager) => {
   await wager.save();
   player.wagers.addToSet(wager._id);
+  player.currentFunds -= wager.amount;
 
   await player.save();
   return;
