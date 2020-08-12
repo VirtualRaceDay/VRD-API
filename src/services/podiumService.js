@@ -3,7 +3,7 @@ export const getPodium = async (raceDay) => {
 
   const players = raceDayWithPlayers.players.sort((previous, next) => {
     //Order descending
-    return previous.currentFunds + next.currentFunds;
+    return next.currentFunds - previous.currentFunds;
   });
 
   let currentRank = 1;
