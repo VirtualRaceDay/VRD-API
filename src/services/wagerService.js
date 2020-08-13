@@ -56,7 +56,7 @@ export const getWagerById = async (id) => {
 };
 
 export const removeWager = async (player, wager) => {
-  player.currentFunds = wager.amount;
+  player.currentFunds += wager.amount;
 
   const id = wager._id;
   await Wager.deleteOne({ _id: id }).exec();
